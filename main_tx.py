@@ -13,7 +13,7 @@ from twisted.web.client import readBody
 
 
 async def main(reactor):
-    # request all events for PyYYC's organization
+    # download from a URI
     uri = u"https://meejah.ca"
     response = await treq.get(
         uri,
