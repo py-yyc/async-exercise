@@ -46,4 +46,13 @@ The Assignment
 Note: without logging in, it's possible we'll hit the rate-limits. If
 that happens, you can use these URIs instead:
 
+For "py-yyc/repos" endpoint:
 
+   https://raw.githubusercontent.com/py-yyc/async-exercise/master/data/repos.json
+
+For "{repo}/commits" endpoint:
+
+   https://raw.githubusercontent.com/py-yyc/async-exercise/master/data/{repo}_commits.json
+
+...so for the "todos_app" repository that would be:
+   https://raw.githubusercontent.com/py-yyc/async-exercise/master/data/todos_app_commits.json
