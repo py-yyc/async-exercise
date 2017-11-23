@@ -25,17 +25,22 @@ framework).
 The Assignment
 --------------
 
-1. List all py-yyc repos
+1. Refactor: make a `async def fetch(url)` function
+
+2. List all py-yyc repos
 
   - url: https://api.github.com/orgs/py-yyc/repos
   - bonus: list the 5 most recent (newest to oldest)
 
-2. discover the SHA1 of the most-recent commit of each repo
+3. discover the SHA1 of the most-recent commit of each repo
 
  - url: https://api.github.com/repos/py-yyc/{repo}/commits
  - bonus: retrieve these in parallel
 
-3. bonus: use authentication
+4. bonus: use authentication
+
+5. bonus: determine wall-clock run-time of your program
+   (compare between parallel / non-parallel if you can)
 
 
 Note: without logging in, it's possible we'll hit the rate-limits. If
