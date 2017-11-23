@@ -10,9 +10,14 @@ async def main(loop):
     url = u"https://meejah.ca"
 
     async with aiohttp.ClientSession(loop=loop) as session:
-        req_context = session.get(url, headers={u"User-Agent": u"asyncio"})
-        async with req_context as resp:
-            raw_data = await resp.text()
+        req_context = session.get(
+            url,
+            headers={
+                u"User-Agent": u"asyncio",
+            }
+        )
+        async with req_context as response:
+            raw_data = await response.text()
 
     print("Received {} bytes".format(len(raw_data)))
 
