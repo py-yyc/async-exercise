@@ -13,11 +13,12 @@ def generateAuthenticatedGithubUrl(url):
 
 
 # Async fetch data from url. Returns raw response
-async def fetchFromUrl(url, append_access_token=True):
+async def fetchFromUrl(url, append_access_token=True, verbose=False):
     if append_access_token:
         url = generateAuthenticatedGithubUrl(url)
 
-    print("Fetching {}".format(url))
+    if verbose:
+        print("Fetching {}".format(url))
 
     async with aiohttp.ClientSession(loop=loop) as session:
         req_context = session.get(
@@ -28,14 +29,16 @@ async def fetchFromUrl(url, append_access_token=True):
         )
         async with req_context as response:
             raw_data = await response.text()
-    print("Received {} bytes".format(len(raw_data)))
+    if verbose:
+        print("Received {} bytes".format(len(raw_data)))
     return raw_data
 
 
-async def fetch_repo_data(repo):
-    repo_raw = await fetchFromUrl(repo['url'] + "/commits")
+# receive a dictionary that contains a 'url' and 'name'
+async def fetch_repo_data(url, name):
+    repo_raw = await fetchFromUrl(url)
     json_repo = json.loads(repo_raw)
-    print("{} -- {}".format(repo['name'], json_repo[0]['sha']))
+    print("{} -- {}".format(name, json_repo[0]['sha']))
 
 
 async def main(loop):
@@ -45,18 +48,20 @@ async def main(loop):
     # ... process data. Here we want to:
     # 1. parse the data from JSON (should return a list-of-dicts)
     json_data = json.loads(repos_raw)
+
     # 2. sort by "updated_at"
     sorted_repos_data = sorted(json_data, key=lambda k: k['updated_at'], reverse=True)
+
     # 3. list the most-recent 5 repositories
-    print("5 most recent repos:")
+    print("--------\n5 most recent repos:")
     # 4. for each repo ^ make a new URI to fetch commits
     # 5. fetch URI, determine SHA of most-recent commit
     awaits = []
     for c, repo in enumerate(sorted_repos_data[:5]):
-        print(repo['name'])
-        awaits.append(fetch_repo_data(repo))
+        print("{}) {} -- {}".format(str(c + 1), repo['name'], repo['updated_at']))
+        awaits.append(fetch_repo_data(repo['url'] + "/commits", repo['name']))
 
-    print("Most recent SHA")
+    print("--------\nMost recent SHA:")
     await asyncio.wait(awaits)
 
 
