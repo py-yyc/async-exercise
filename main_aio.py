@@ -36,7 +36,7 @@ class AwaitList:
 
     def _done(self, future):
         self.waiting.remove(future)
-        self.ready.append(future.r`esult())
+        self.ready.append(future.result())
         self.ready_signal.set()
 
     def __aiter__(self):
