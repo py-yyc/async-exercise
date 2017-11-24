@@ -14,7 +14,7 @@ from twisted.web.client import readBody
 
 async def main(reactor):
     # download from a URI
-    uri = u"https://meejah.ca"
+    uri = u"https://api.github.com/orgs/py-yyc/repos"
     response = await treq.get(
         uri,
         headers={
