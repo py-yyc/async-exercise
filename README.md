@@ -21,6 +21,12 @@ Start with either `main_tx.py` or `main_aio.py` depending upon whether
 you want to use Twisted or asyncio (if you finish, try the other
 framework).
 
+Create a file `api-key.json` and populate it with a Personal Access Token from github:
+```json
+{
+    "api: "{code}"
+}
+```
 
 The Assignment
 --------------
