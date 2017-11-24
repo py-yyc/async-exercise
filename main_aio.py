@@ -5,8 +5,8 @@ import aiohttp
 
 # Get api from config file
 with open("api-key.json") as config_file:
-    json_data = json.load(config_file)
-    githubAccessKey = json_data["api"]
+    githubAccessKey = json.load(config_file)["api"]
+
 
 def generateAuthenticatedGithubUrl(url):
     return "{}?access_token={}".format(url, githubAccessKey)
@@ -32,6 +32,12 @@ async def fetchFromUrl(url, append_access_token=True):
     return raw_data
 
 
+async def fetch_repo_data(repo):
+    repo_raw = await fetchFromUrl(repo['url'] + "/commits")
+    json_repo = json.loads(repo_raw)
+    print("{} -- {}".format(repo['name'], json_repo[0]['sha']))
+
+
 async def main(loop):
     # download from a URL
     repos_raw = await fetchFromUrl("https://api.github.com/orgs/py-yyc/repos")
@@ -42,14 +48,16 @@ async def main(loop):
     # 2. sort by "updated_at"
     sorted_repos_data = sorted(json_data, key=lambda k: k['updated_at'], reverse=True)
     # 3. list the most-recent 5 repositories
+    print("5 most recent repos:")
     # 4. for each repo ^ make a new URI to fetch commits
     # 5. fetch URI, determine SHA of most-recent commit
+    awaits = []
     for c, repo in enumerate(sorted_repos_data[:5]):
-        print("starting " + str(c))
-        repo_raw = await fetchFromUrl(repo['url'] + "/commits")
-        json_repo = json.loads(repo_raw)
-        print("{} -- {}".format(repo['name'], json_repo[0]['sha']))
-        print("ending " + str(c))
+        print(repo['name'])
+        awaits.append(fetch_repo_data(repo))
+
+    print("Most recent SHA")
+    await asyncio.wait(awaits)
 
 
 if __name__ == '__main__':
